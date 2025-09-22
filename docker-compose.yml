@@ -1,0 +1,94 @@
+services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672" #AMQP protocol
+      - "15672:15672" #Web UI Rabbit management
+    environment:
+      RABBITMQ_DEFAULT_USER: admin
+      RABBITMQ_DEFAULT_PASS: admin1234
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    networks:
+      - my-network
+
+    # frontend
+  order-cafe:
+    build:
+      context: ./order-cafe
+      dockerfile: Dockerfile
+      args:
+        VITE_API_URL: "http://localhost:5000"
+    container_name: order-cafe
+    hostname: order-cafe
+    networks:
+      - my-network
+    ports:
+      - 5173:5173
+  api-gateway:
+    build:
+      context: ./api-gateway
+      dockerfile: Dockerfile
+    container_name: api-gateway
+    hostname: api-gateway
+    networks:
+      - my-network
+    ports:
+      - 5000:5000
+    environment:
+      - PORT=5000
+      - MENU_SERVICE_URL=http://menu-service:4001
+      - ORDER_SERVICE_URL=http://order-service:4002
+    depends_on:
+      - menu-service
+      - order-service
+      - logs-service
+  menu-service:
+    build:
+      context: ./menu-service
+      dockerfile: Dockerfile
+    container_name: menu-service
+    hostname: menu-service
+    networks:
+      - my-network
+    ports:
+      - 4001:4001
+    environment:
+      - PORT=4001
+      - RABBITMQ_URL=amqp://admin:admin1234@rabbitmq:5672
+    depends_on:
+      - rabbitmq
+  logs-service:
+    build:
+      context: ./logs-service
+      dockerfile: Dockerfile
+    container_name: logs-service
+    hostname: logs-service
+    networks:
+      - my-network
+    environment:
+      - RABBITMQ_URL=amqp://admin:admin1234@rabbitmq:5672
+    depends_on:
+      - rabbitmq
+  order-service:
+    build:
+      context: ./order-service
+      dockerfile: Dockerfile
+    container_name: order-service
+    hostname: order-service
+    networks:
+      - my-network
+    ports:
+      - 4002:4002
+    environment:
+      - PORT=4002
+      - RABBITMQ_URL=amqp://admin:admin1234@rabbitmq:5672
+    depends_on:
+      - rabbitmq
+
+volumes:
+  rabbitmq_data:
+networks:
+  my-network:
+    driver: bridge

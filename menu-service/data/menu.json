@@ -1,0 +1,59 @@
+{
+  "menu": [
+    {
+      "id": 1,
+      "title": "Bryggkaffe",
+      "desc": "Bryggd på månadens bönor.",
+      "price": 39
+    },
+    {
+      "id": 2,
+      "title": "Caffè Doppio",
+      "desc": "Bryggd på månadens bönor.",
+      "price": 49
+    },
+    {
+      "id": 3,
+      "title": "Cappuccino",
+      "desc": "Bryggd på månadens bönor.",
+      "price": 49
+    },
+    {
+      "id": 4,
+      "title": "Latte Macchiato",
+      "desc": "Bryggd på månadens bönor.",
+      "price": 49
+    },
+    {
+      "id": 5,
+      "title": "Kaffe Latte",
+      "desc": "Bryggd på månadens bönor.",
+      "price": 54
+    },
+    {
+      "id": 6,
+      "title": "Cortado",
+      "desc": "Bryggd på månadens bönor.",
+      "price": 39
+    },
+    { "id": 7, "title": "Gustav Adolfsbakelse", "price": 40 },
+    {
+      "id": 8,
+      "title": "Chai Latte",
+      "desc": "Kryddig tebaserad latte med kanel och kardemumma.",
+      "price": 52
+    },
+    {
+      "id": 9,
+      "title": "Matcha Latte",
+      "desc": "Krämig latte gjord på japanskt grönt te.",
+      "price": 56
+    },
+    {
+      "id": 10,
+      "title": "Croissant",
+      "desc": "Nybakad smörig croissant.",
+      "price": 35
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+# ========================
+# Node / JavaScript
+# ========================
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# ========================
+# Environment files
+# ========================
+.env
+.env.*
+!.env.example   # giữ lại file ví dụ
+
+# ========================
+# Build output
+# ========================
+dist/
+build/
+.cache/
+.next/
+out/
+
+# ========================
+# Docker
+# ========================
+*.pid
+*.pid.lock
+
+# ========================
+# Editors / OS
+# ========================
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
