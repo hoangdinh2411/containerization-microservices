@@ -38,17 +38,14 @@ jobs:
             echo "===> Ensure Docker is running..."
             sudo systemctl start docker
 
-            cd /home/ubuntu/containerization-microservices || {
-              echo "===> Repo not found, cloning..."
-              cd /home/ubuntu
-              git clone https://github.com/hoangdinh2411/containerization-microservices.git
-              cd containerization-microservices
-            }
-
-            echo "===> Reset repo to latest main..."
-            git fetch origin main
-            git reset --hard origin/main
-
+            if [ ! -d "/home/ubuntu/containerization-microservices" ]; then
+            cd /home/ubuntu
+            git clone https://github.com/hoangdinh2411/containerization-microservices.git
+            else
+              cd /home/ubuntu/containerization-microservices
+              git fetch origin main
+              git reset --hard origin/main
+            fi
             echo "===> Stop and remove old containers..."
             docker compose down || true
             docker ps -aq | xargs -r docker rm -f || true
