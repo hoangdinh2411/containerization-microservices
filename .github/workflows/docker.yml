@@ -38,9 +38,10 @@ jobs:
               git clone https://github.com/hoangdinh2411/containerization-microservices.git
             else
               cd /home/ubuntu/containerization-microservices
-              git pull origin main || true
+              git fetch origin main
+              git reset --hard origin/main
             fi
-
+            sudo systemctl start docker
             cd /home/ubuntu/containerization-microservices
             docker compose pull
             docker compose down
