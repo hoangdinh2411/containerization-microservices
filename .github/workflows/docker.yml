@@ -26,3 +26,21 @@ jobs:
           file: ./${{ matrix.service }}/Dockerfile
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ matrix.service }}:latest
+      - name: Deploy to EC2
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            if [ ! -d "/home/ubuntu/containerization-microservices" ]; then
+              cd /home/ubuntu
+              git clone https://github.com/hoangdinh2411/containerization-microservices.git
+            else
+              cd /home/ubuntu/containerization-microservices
+              git pull origin main || true
+            fi
+
+            cd /home/ubuntu/containerization-microservices
+            docker compose pull
+            docker compose up -d --build
