@@ -9,6 +9,7 @@ function useAPI() {
   const orders = useSelector((state) => state.app.orders.list);
   const totalProduct = useSelector((state) => state.app.orders.totalProduct);
   const API_URL = import.meta.env.VITE_API_URL;
+  console.log(API_URL)
   const fetchingMenu = async () => {
     await fetch(API_URL + "/api/menu", {
       method: "GET",
