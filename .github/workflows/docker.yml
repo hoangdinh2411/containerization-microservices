@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  docker:
+  build:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -26,6 +26,11 @@ jobs:
           file: ./${{ matrix.service }}/Dockerfile
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ matrix.service }}:latest
+  
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build   # chỉ chạy sau khi build xong tất cả
+    steps:
       - name: Deploy to EC2
         uses: appleboy/ssh-action@v1.0.0
         with:
@@ -34,29 +39,24 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             set -e
-
-            echo "===> Ensure Docker is running..."
             sudo systemctl start docker
 
             if [ ! -d "/home/ubuntu/containerization-microservices" ]; then
-            cd /home/ubuntu
-            git clone https://github.com/hoangdinh2411/containerization-microservices.git
+              cd /home/ubuntu
+              git clone https://github.com/hoangdinh2411/containerization-microservices.git
             else
               cd /home/ubuntu/containerization-microservices
               git fetch origin main
               git reset --hard origin/main
             fi
-            echo "===> Stop and remove old containers..."
+
+            echo "===> Cleanup old containers..."
             docker compose down || true
             docker ps -aq | xargs -r docker rm -f || true
-
-            echo "===> Remove dangling/old images..."
             docker rmi -f $(docker images -aq) || true
 
             echo "===> Pull fresh images..."
             docker compose pull
 
-            echo "===> Rebuild and start services..."
+            echo "===> Start services..."
             docker compose up -d --build
-
-            echo "===> Deployment done ✅"
