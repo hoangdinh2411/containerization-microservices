@@ -17,7 +17,7 @@ services:
       context: ./order-cafe
       dockerfile: Dockerfile
       args:
-        VITE_API_URL: "http://api-gateway:5000"
+        VITE_API_URL: "http://54.247.31.224/5000"
     networks:
       - my-network
     ports:
